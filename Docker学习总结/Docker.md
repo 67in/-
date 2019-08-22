@@ -248,8 +248,7 @@ docker rmi -f $(docker images -qa)删除全部镜像
         docker images mycentos
         docker history id
 ### CMD和ENTRYPOINT镜像案例  
-  docker ps
-  docker images tomcat
-  docker run -it -p 7777:8080 tomcat成功启动tomcat
-  若执行docker run -it -p 7777:8080 tomcat ls -l, 相当于dockerfile中的最后一行CMD没有用，执行这里的ls -l,被这个给覆盖了
-  而ENTRYPOINT这个命令不会被覆盖
+docker ps
+docker images tomcat
+docker run -it -p 7777:8080 tomcat成功启动tomcat
+若执行docker run -it -p 7777:8080 tomcat ls -l, 相当于dockerfile中的最后一行CMD没有用，执行这里的ls -l,被这个给覆盖了，而ENTRYPOINT这个命令不会被覆盖
