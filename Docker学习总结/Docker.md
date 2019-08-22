@@ -111,17 +111,17 @@ docker rmi -f $(docker images -qa)删除全部镜像
         docker cp id:/tmp/yum.log /root
 ## Docker 镜像（千层饼，花卷）
 ### 镜像是什么
-    轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、环境变量、配置文件等
+   轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、环境变量、配置文件等
 
-    UnionFS(联合文件系统)：一种分层、轻量级并且高性能的文件系统，支持对文件系统的修改作为一次提交来一层层的叠加，同时可将不同目录挂载到同一个虚拟文件系统下
-    Union文件系统是Docker镜像的基础，镜像可通过分层来进行继承，基于基础镜像，可制作各种具体的应用镜像
+   UnionFS(联合文件系统)：一种分层、轻量级并且高性能的文件系统，支持对文件系统的修改作为一次提交来一层层的叠加，同时可将不同目录挂载到同一个虚拟文件系统下
+   Union文件系统是Docker镜像的基础，镜像可通过分层来进行继承，基于基础镜像，可制作各种具体的应用镜像
 
-    tomcat镜像为什么400多M，这么大？ 是一层层叠加起来，内核，Centos，idk8,tomcat叠加起来的
+   tomcat镜像为什么400多M，这么大？ 是一层层叠加起来，内核，Centos，idk8,tomcat叠加起来的
 
-    Docker镜像都是只读的，当容器启动时，一个新的可写层被加载到镜像的顶部。这一层通常被称为“容器层”，“容器层”之下的都叫“镜像层”
+   Docker镜像都是只读的，当容器启动时，一个新的可写层被加载到镜像的顶部。这一层通常被称为“容器层”，“容器层”之下的都叫“镜像层”
 ### 镜像commit操作补充
-    docker commit 提交容器副本使之成为一个新的镜像
-    docker commit -m="提交的描述信息" -a="作者" 容器ID要创建的目标镜像名：[标签名]
+   docker commit 提交容器副本使之成为一个新的镜像
+   docker commit -m="提交的描述信息" -a="作者" 容器ID要创建的目标镜像名：[标签名]
 
 ### 操作实例
 - 从Hub上下载tomcat镜像到本地并成功运行
@@ -208,49 +208,48 @@ docker rmi -f $(docker images -qa)删除全部镜像
   Dockerfile面向开发，Docker镜像成为交付标准，Docker容器则涉及部署与运维
   ![dockerfile,镜像，容器](https://raw.githubusercontent.com/67in/photo_md/master/docker3.PNG)
 #### DockerFile体系结构（保留字指令）
-    - FROM  基础镜像
-    - MAINTAINER  镜像维护者的姓名和邮箱
-    - RUN  容器构建时需要运行的命令
-    - EXPOSE  当前容器对外暴露出的端口
-    - WORKDIR  指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点
-    - ENV  用来在构建镜像过程中设置环境变量
-    - ADD  将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包
-    - COPY  类似ADD，拷贝文件和目录到镜像中
+   - FROM  基础镜像
+   - MAINTAINER  镜像维护者的姓名和邮箱
+   - RUN  容器构建时需要运行的命令
+   - EXPOSE  当前容器对外暴露出的端口
+   - WORKDIR  指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点
+   - ENV  用来在构建镜像过程中设置环境变量
+   - ADD  将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包
+   - COPY  类似ADD，拷贝文件和目录到镜像中
             将从构建上下文目录中<源路径>的文件/目录复制到新的一层的镜像内的<目标路径>位置
-    - VOLUME  容器数据卷，用于数据保存和持久化工作
-    - CMD  指定一个容器启动时要运行的命令
+   - VOLUME  容器数据卷，用于数据保存和持久化工作
+   - CMD  指定一个容器启动时要运行的命令
            Dockerfile中可以有多个CMD指令，但只有最后一个生效，CMD会被docker run 之后的参数替换
-    - ENTRYPOINT  指定一个容器启动时要运行的命令，和CMD一样，都是在指定容器启动程序及参数
-    - ONBUILD  当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发
+   - ENTRYPOINT  指定一个容器启动时要运行的命令，和CMD一样，都是在指定容器启动程序及参数
+   - ONBUILD  当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发
 ### 自定义镜像mycentos
  原版centos没有vim/ifconfig命令
     - 编写
+    
+    ```
         FROM centos
         MAINTAINER zzyy<zzyy167@126.com>
-
         ENV MYPATH /usr/local
         WORKDIR $MYPATH
-
         RUN yum -y install vim
         RUN yum -y install net-tools
-
         EXPOSE 80
-
         CMD echo $MYPATH
         CMD echo "success---------ok"
         CMD /bin/bash
-
-    - 构建
+    ```
+    
+   - 构建
         docker build -t 新镜像名字：TAG.   注意最后有个. 代表当前路径
         docker build -f /mydocker/Dockerfile2 -t mycentos:1.3.
         docker run -it mycentos:1.3
 
-    - 历史
+   - 历史
         docker images mycentos
         docker history id
 ### CMD和ENTRYPOINT镜像案例  
-    docker ps
-    docker images tomcat
-    docker run -it -p 7777:8080 tomcat成功启动tomcat
-    若执行docker run -it -p 7777:8080 tomcat ls -l, 相当于dockerfile中的最后一行CMD没有用，执行这里的ls -l,被这个给覆盖了
-    而ENTRYPOINT这个命令不会被覆盖
+  docker ps
+  docker images tomcat
+  docker run -it -p 7777:8080 tomcat成功启动tomcat
+  若执行docker run -it -p 7777:8080 tomcat ls -l, 相当于dockerfile中的最后一行CMD没有用，执行这里的ls -l,被这个给覆盖了
+  而ENTRYPOINT这个命令不会被覆盖
